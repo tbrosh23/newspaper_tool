@@ -14,8 +14,8 @@ A tool that will let you search and view historical newspapers.
         * take screenshots of lines and save as .png
         * Look online for existing database?
             * Difficult because I need specific data (see singleline.png)
-    * Do ML training using SimpleHTR with input data
-* Eventually need a way to segment newspaper->articles->lines->text.  The previous bullets here handle lines-> part, but I still need a way to go from articles->lines so the user can just screenshot the article they want transcribed for now.
+    * Do ML training using SimpleHTR with input data (This should be straightforward once we have data)
+* Eventually need a way to segment newspaper->articles->lines->text.  The previous bullets here handle lines->part, but I still need a way to go from articles->lines so the user can just screenshot the article they want transcribed for now.
 
 To do printed words to text: https://github.com/githubharald/SimpleHTR
 
