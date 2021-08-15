@@ -36,7 +36,8 @@ class segment_lines():
         print("Pixel average: %d\n", sum)
 
     def scan_image(self):
-        self.paper_lines = []
+        SAVING = True
+        SHOWING = False
         rows,cols = self.img.shape
         print(rows, cols)
         # Sum the total pixel values of each row.
@@ -48,21 +49,32 @@ class segment_lines():
         row_sum = 0
         in_white = 0
         in_text = 0
+        num_image = 0
         for i in range(rows):
             row_sum = 0
             for j in range(cols):
                 row_sum+=self.img[i,j]
             row_sum = row_sum / cols
             if(row_sum > threshold):
-                self.draw_line((0, i), (cols, i), 10)
+                #self.draw_line((0, i), (cols, i), 10)
                 in_white = 1
 
                 #If in_text == True, we just got out of text ( in to whitespace)
                 if(in_text):
                     end_row = i
-                    temp_img = np.zeros((end_row-start_row, cols), np.uint8)
-                    temp_img[:,:] = self.img[start_row:end_row,:]
-                    self.show_image(temp_img)
+                    # Assume that lines less than 6 lines are false positives
+                    if (end_row - start_row) < 6:
+                        pass
+                    else:
+                        temp_img = np.zeros((end_row-start_row+4, cols), np.uint8)
+                        # Give 2 pixels on either side as a buffer
+                        temp_img[:,:] = self.img[start_row-2:end_row+2,:]
+                        if SHOWING:
+                            self.show_image(temp_img)
+                        if SAVING:
+                            name = 'newspaper_tool/training/line'+str(num_image)+'.png'
+                            cv2.imwrite(name, temp_img)
+                            num_image += 1
                 in_text = 0
                 pass
             else:
