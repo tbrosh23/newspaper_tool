@@ -13,6 +13,7 @@ General flow is: newspaper->articles->lines->text. Later on there may be a front
         * File assembler to take data and follow standard
     * Algorithm to segment article into lines (covers the articles->lines part of the flowchart.)
         * ~~Initial way to segment lines~~ **DONE, see `segment_lines.py`**
+            * The current way works well for high quality images, but may need adjusting to accomodate edge cases
         * Further tune the seperation to select less whitespace
         * Temporary: automatically save lines as new images (.png) into a 'training' folder
         * complete the pipeline into ML picture to text
