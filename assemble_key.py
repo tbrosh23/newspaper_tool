@@ -9,21 +9,21 @@ class assemble_key:
         pass
     
     def parsetext(self):
-        newline = []
+        self.textcontents = []
         with open(self.textpath,'r') as fp:
             line = 'asdf'
             ind = 0
             while line != '':
                 line = fp.readline()
                 words = line.split(' ')
-                newline.append('')
+                self.textcontents.append('')
                 for i in words:
-                    newline[ind] += i+'|'
-                newline[ind] = newline[ind].rstrip(newline[ind][-1])
+                    self.textcontents[ind] += i+'|'
+                self.textcontents[ind] = self.textcontents[ind].rstrip(self.textcontents[ind][-1])
                 ind = ind+1
 
-        newline.pop(len(newline)-1)
-        print(newline)
+        self.textcontents.pop(len(self.textcontents)-1)
+        print(self.textcontents)
         pass
     
     def load_image(self):
