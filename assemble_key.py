@@ -3,18 +3,18 @@ import os
 
 # Give path to the data folder and text folder and assemble key textfile
 class assemble_key:
-    def __init__(self, textpath, imgpath):
+    def __init__(self, textpath, imgdir):
         self.textpath = textpath
-        self.imgpath = imgpath
+        self.imgdir = imgdir
         self.bounds = []
         self.average = []
         self.segmented = []
         self.num_components = []
+        self.imgnames = []
         if not os.path.exists('./newspaper_tool/training'):
             os.mkdir('./newspaper/training')
         if not os.path.exists('./newspaper_tool/training/key'):
             os.mkdir('./newspaper_tool/training/key')
-        self.load_image()
         pass
     
     def parsetext(self):
@@ -59,15 +59,15 @@ class assemble_key:
 
         pass
     
-    def load_image(self):
-        self.img = cv2.imread(self.imgpath)
+    def load_image(self, imgpath):
+        self.img = cv2.imread(imgpath)
         self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
 
     # For now just take the entire image as bounds
     def get_bounds(self):
         rows, cols = self.img.shape
-        print('Rows, cols: ', rows, cols)
-        print(rows/2, cols/2)
+        #print('Rows, cols: ', rows, cols)
+        #print(rows/2, cols/2)
         # For now, go (x_min, x_max, y_min, y_max)
         self.bounds.append((0, 0, cols, rows))
         pass
@@ -79,18 +79,48 @@ class assemble_key:
         for i in range(rows):
             for j in range(cols):
                 avg += self.img[i,j]
+        avg = int(avg / (rows*cols))
         self.average.append(avg)
 
     def get_segmentation(self):
         # For now, just say ok for all
         self.segmented.append('ok')
 
+    def iterate_through_images(self):
+        # Go through all images and get bounds, graylevel, segmentation, and name
+        images = os.listdir(self.imgdir)
+        for i in images:
+            self.load_image(self.imgdir+i)
+            self.get_bounds()
+            self.get_graylevel()
+            self.get_segmentation()
+            self.imgnames.append(i[:len(i)-4])
+        pass
+
+    def create_key(self):
+        # Combine metadata and data to create entire key
+        #TODO: sort os.listdir'd files by increasing line number
+        # so data is properly attributed
+        with open('./newspaper_tool/training/key/lines.txt','w') as fp:
+            image_ind = 0
+            while(image_ind < len(self.textcontents)):
+                bounds = []
+                for i in range(4):
+                    bounds+=str(self.bounds[image_ind][i])+' '
+                bounds = ''.join(bounds)
+                to_write = self.imgnames[image_ind]+' '+self.segmented[image_ind] +' ' \
+                    +str(self.average[image_ind])+' '+str(self.num_components[image_ind]) \
+                    +' '+bounds+self.textcontents[image_ind]+'\n'
+                fp.write(to_write)
+                image_ind += 1
+
 
 def main():
-    test = assemble_key('./newspaper_tool/text/lines.txt','./data/lines/a01/a01-000u/a01-000u-02.png')
+    test = assemble_key('./newspaper_tool/text/lines.txt','./newspaper_tool/training/images/')
     test.parsetext()
-    test.get_bounds()
     test.get_components()
+    test.iterate_through_images()
+    test.create_key()
 
 if __name__ == "__main__":
     main()
