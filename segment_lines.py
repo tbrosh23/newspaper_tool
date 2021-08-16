@@ -8,8 +8,8 @@ class segment_lines():
         self.article_path = article_path
         if not os.path.exists('./newspaper_tool/training'):
             os.mkdir('./newspaper_tool/training')
-        if not os.path.exists('./newspaper_tool/training/images'):
-            os.mkdir('./newspaper_tool/training/images')
+        if not os.path.exists('./newspaper_tool/training/img'):
+            os.mkdir('./newspaper_tool/training/img')
         self.img = ''
         self.load_image()
         self.get_average_pixel_value()
@@ -77,7 +77,11 @@ class segment_lines():
                         if SHOWING:
                             self.show_image(temp_img)
                         if SAVING:
-                            name = 'newspaper_tool/training/images/line'+str(num_image)+'.png'
+                            if num_image > 9:
+                                img_index = str(num_image)
+                            else:
+                                img_index = '0'+str(num_image)
+                            name = 'newspaper_tool/training/img/a01-000u-'+img_index+'.png'
                             cv2.imwrite(name, temp_img)
                             num_image += 1
                 in_text = 0

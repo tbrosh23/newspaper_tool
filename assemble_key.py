@@ -1,5 +1,6 @@
 import cv2
 import os
+import re
 
 # Give path to the data folder and text folder and assemble key textfile
 class assemble_key:
@@ -13,8 +14,8 @@ class assemble_key:
         self.imgnames = []
         if not os.path.exists('./newspaper_tool/training'):
             os.mkdir('./newspaper/training')
-        if not os.path.exists('./newspaper_tool/training/key'):
-            os.mkdir('./newspaper_tool/training/key')
+        if not os.path.exists('./newspaper_tool/training/gt'):
+            os.mkdir('./newspaper_tool/training/gt')
         pass
     
     def parsetext(self):
@@ -35,7 +36,7 @@ class assemble_key:
                 ind = ind+1
                 line = fp.readline()
 
-        self.textcontents.pop(len(self.textcontents)-1)
+        #self.textcontents.pop(len(self.textcontents)-1)
         print(self.textcontents)
         pass
 
@@ -97,11 +98,33 @@ class assemble_key:
             self.imgnames.append(i[:len(i)-4])
         pass
 
+    def sort_listdir(self):
+        imgnums = []
+        for i in self.imgnames:
+            #print(i)
+            imgnums.append(int(re.search(r'\d+', i).group()))
+
+        # Bubble sort to re-order self.imgnames to be 0,1,2,3,4...
+        for i in range(len(self.imgnames)):
+            for j in range(i,len(self.imgnames)):
+                if imgnums[i] > imgnums[j]:
+                    # Sort imgnums, as well as imgnames
+                    temp = imgnums[j]
+                    imgnums[j] = imgnums[i]
+                    imgnums[i] = temp
+
+                    temp = self.imgnames[j]
+                    self.imgnames[j] = self.imgnames[i]
+                    self.imgnames[i] = temp
+
+
+        pass
+
     def create_key(self):
         # Combine metadata and data to create entire key
         #TODO: sort os.listdir'd files by increasing line number
         # so data is properly attributed
-        with open('./newspaper_tool/training/key/lines.txt','w') as fp:
+        with open('./newspaper_tool/training/gt/words.txt','w') as fp:
             image_ind = 0
             while(image_ind < len(self.textcontents)):
                 bounds = []
@@ -116,10 +139,11 @@ class assemble_key:
 
 
 def main():
-    test = assemble_key('./newspaper_tool/text/lines.txt','./newspaper_tool/training/images/')
+    test = assemble_key('./newspaper_tool/text/lines.txt','./newspaper_tool/training/img/')
     test.parsetext()
     test.get_components()
     test.iterate_through_images()
+    test.sort_listdir()
     test.create_key()
 
 if __name__ == "__main__":
