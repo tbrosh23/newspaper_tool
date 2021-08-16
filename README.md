@@ -24,7 +24,7 @@ General flow is: newspaper->articles->lines->text. Later on there may be a front
         * Look online for existing database?
             * Difficult because I need specific data (see singleline.png)
     * Do ML training using SimpleHTR with input data (This should be straightforward once we have data)
-* Eventually need a way to segment newspaper->articles->lines->text.  The previous bullets here handle lines->part, but I still need a way to go from articles->lines so the user can just screenshot the article they want transcribed for now.
+* Eventually need a way to segment newspaper->articles->lines->text.  The previous bullets here handle lines->part, ~~but I still need a way to go from articles->lines~~ so the user can just screenshot the article they want transcribed for now.
 
 To do printed words to text: https://github.com/githubharald/SimpleHTR
 

@@ -1,13 +1,19 @@
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
+import os
 
 class segment_lines():
     def __init__(self, article_path):
         self.article_path = article_path
+        if not os.path.exists('./newspaper_tool/training'):
+            os.mkdir('./newspaper_tool/training')
+        if not os.path.exists('./newspaper_tool/training/images'):
+            os.mkdir('./newspaper_tool/training/images')
         self.img = ''
         self.load_image()
         self.get_average_pixel_value()
+        
         pass
 
     def load_image(self):
@@ -18,7 +24,6 @@ class segment_lines():
         cv2.imshow('Title',img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-        pass
 
     def draw_line(self, start, end, thickness):
         cv2.line(self.img, start, end, thickness)
@@ -72,7 +77,7 @@ class segment_lines():
                         if SHOWING:
                             self.show_image(temp_img)
                         if SAVING:
-                            name = 'newspaper_tool/training/line'+str(num_image)+'.png'
+                            name = 'newspaper_tool/training/images/line'+str(num_image)+'.png'
                             cv2.imwrite(name, temp_img)
                             num_image += 1
                 in_text = 0
