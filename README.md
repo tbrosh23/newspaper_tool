@@ -29,5 +29,6 @@ General flow is: newspaper->articles->lines->text. Later on there may be a front
 To do printed words to text: https://github.com/githubharald/SimpleHTR
 
 See for handwriting database: https://fki.tic.heia-fr.ch/databases/iam-handwriting-database
+* https://fki.tic.heia-fr.ch/databases/download-the-iam-handwriting-database
 
 Library of Congress historical newspaper database: https://chroniclingamerica.loc.gov/about/api/
