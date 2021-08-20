@@ -15,6 +15,7 @@ class segment_lines():
         self.pix_average = self.get_average_pixel_value(self.img)
         self.line_img = []
         self.word_img = []
+        self.word_line_img = []
         
         pass
 
@@ -100,7 +101,7 @@ class segment_lines():
     # We may need to split lines into words for training
     def get_split_words(self):
         SAVING=0
-        SHOWING=1
+        SHOWING=0
 
         to_split = self.line_img[0]
 
@@ -120,7 +121,9 @@ class segment_lines():
         # Assume start in white
         in_white = 1
         block_width = 7
+        line_num = 0
         for splitting in self.line_img:
+            self.word_line_img.append([])
             rows, cols = splitting.shape
             pix_average = self.get_average_pixel_value(to_split)
             threshold = pix_average
@@ -149,6 +152,7 @@ class segment_lines():
                             # Give 2 pixels on either side as a buffer
                             temp_img[:,:] = splitting[:,start_col-2:end_col+2]
                             self.word_img.append(temp_img)
+                            self.word_line_img[line_num].append(temp_img)
                             if SHOWING:
                                 self.show_image(temp_img)
                             """
@@ -171,8 +175,14 @@ class segment_lines():
                         start_col = j
                     in_white = 0
 
-
+            line_num+=1
             pass
+
+    def show_all_words_per_line(self):
+        for i in range(len(self.word_line_img)):
+            print('Line %d\n' % i)
+            for j in range(len(self.word_line_img[i])):
+                self.show_image(self.word_line_img[i][j])
                 
 
                 
@@ -186,5 +196,6 @@ def main():
     #test.show_image(test.img)
     #test.draw_line(test.img,(0, 200), (423, 200), 10)
     test.get_split_words()
+    test.show_all_words_per_line()
 if __name__ == "__main__":
     main()
