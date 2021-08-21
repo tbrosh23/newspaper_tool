@@ -16,6 +16,8 @@ class segment_lines():
         self.line_img = []
         self.word_img = []
         self.word_line_img = []
+        self.key_path = './newspaper_tool/text/lines.txt'
+        self.make_subfolders()
         
         pass
 
@@ -45,7 +47,7 @@ class segment_lines():
         return pix_average
 
     def scan_image(self):
-        SAVING = True
+        SAVING = False
         SHOWING = False
         rows,cols = self.img.shape
         print(rows, cols)
@@ -178,11 +180,34 @@ class segment_lines():
             line_num+=1
             pass
 
+    # Read number of lines and make a new folder inside of 'training for each of them, labeled lineX
+    def make_subfolders(self):
+        with open(self.key_path, 'r') as fp:
+            line_num = 0
+            line = 'asdf'
+            while(line != ''):
+                line = fp.readline()
+                line_num += 1
+
+        line_num -= 1
+        for i in range(line_num):
+            fullpath = './newspaper_tool/training/img/line'+str(i)
+            if(not os.path.isdir(fullpath)):
+                os.mkdir(fullpath)
+        
+
+
+        pass
     def show_all_words_per_line(self):
+        img_index = 0
         for i in range(len(self.word_line_img)):
             print('Line %d\n' % i)
+            img_index = 0
             for j in range(len(self.word_line_img[i])):
-                self.show_image(self.word_line_img[i][j])
+                #self.show_image(self.word_line_img[i][j])
+                name = 'newspaper_tool/training/img/line'+str(i)+'/u-'+str(img_index)+'.png'
+                cv2.imwrite(name, self.word_line_img[i][j])
+                img_index+=1
                 
 
                 
