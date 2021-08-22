@@ -40,6 +40,21 @@ class assemble_key:
         print(self.textcontents)
         pass
 
+    def parsetext_byword(self):
+        self.wordcontents = []
+        with open(self.textpath,'r') as fp:
+            line = 'asdf'
+            ind = 0
+            line = fp.readline()
+            while line != '':
+                self.wordcontents.append([])
+                words = line.split(' ')
+                for i in words:
+                    self.wordcontents[ind].append(i)
+                ind+=1
+                line = fp.readline()
+
+
     def get_components(self):
         # Check how many different ASCII codes exist
 
@@ -120,11 +135,11 @@ class assemble_key:
 
         pass
 
-    def create_key(self):
+    def create_line_key(self):
         # Combine metadata and data to create entire key
         #TODO: sort os.listdir'd files by increasing line number
         # so data is properly attributed
-        with open('./newspaper_tool/training/gt/words.txt','w') as fp:
+        with open('./newspaper_tool/training/gt/lines.txt','w') as fp:
             image_ind = 0
             while(image_ind < len(self.textcontents)):
                 bounds = []
@@ -137,14 +152,32 @@ class assemble_key:
                 fp.write(to_write)
                 image_ind += 1
 
+    def create_word_key(self):
+        # Create the word key.  Each word will have a different line entry in the key
+        # Need a way to determine the grammatical tag for each word
+        with open('./newspaper_tool/training/gt/words.txt','w') as fp:
+            image_ind = 0
+            while(image_ind < len(self.wordcontents)):
+                gram_tag = 'AT'
+                bounds = [0,0,0,0]
+                bounds = ''.join(str(bounds))
+                for i in range(len(self.wordcontents[image_ind])):
+                    self.wordcontents[image_ind][i] = self.wordcontents[image_ind][i].rstrip('\n')
+                    to_write = 'line'+str(image_ind)+'-'+str(i)+' '+bounds+' '+gram_tag+' '+ \
+                        self.wordcontents[image_ind][i]+'\n'
+                    fp.write(to_write)
+                image_ind+=1
+
 
 def main():
     test = assemble_key('./newspaper_tool/text/lines.txt','./newspaper_tool/training/img/')
-    test.parsetext()
-    test.get_components()
-    test.iterate_through_images()
-    test.sort_listdir()
-    test.create_key()
+    #test.parsetext()
+    test.parsetext_byword()
+    #test.get_components()
+    #test.iterate_through_images()
+    #test.sort_listdir()
+    #test.create_line_key()
+    test.create_word_key()
 
 if __name__ == "__main__":
     main()
